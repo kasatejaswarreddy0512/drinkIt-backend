@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: drinkIt
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/drinkit?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata
+    username: root
+    password: Teja@123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+  sql:
+    init:
+      mode: never
