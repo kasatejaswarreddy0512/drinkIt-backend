@@ -18,6 +18,7 @@ public enum ErrorCode {
     UNAUTHORIZED("ERR502", "Unauthorized access."),
 
     ADDRESS_NOT_FOUND("ERR503", "Address not found."),
+    CATEGORY_NOT_FOUND("ERR504", "Category not found."),
     ;
 
 

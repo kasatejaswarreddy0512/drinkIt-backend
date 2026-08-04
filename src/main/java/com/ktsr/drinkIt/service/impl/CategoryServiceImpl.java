@@ -16,26 +16,62 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category createCategory(Category category) {
-        return null;
+
+        if(categoryRepository.existsByNameIgnoreCase(category.getName())) {
+            throw new IllegalArgumentException("Category with name " + category.getName() + " already exists");
+        }
+        return categoryRepository.save(category);
     }
 
     @Override
-    public Category updateCategory(Category category) {
-        return null;
+    public Category updateCategory(Long id,Category category) {
+        Category existing = categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Category with id " + id + " does not exist"));
+
+        if(categoryRepository.existsByNameIgnoreCase(category.getName())) {
+            throw new IllegalArgumentException("Category with name " + category.getName() + " already exists");
+        }
+        existing.setName(category.getName());
+        existing.setActive(category.getActive());
+        existing.setDescription(category.getDescription());
+        existing.setImage(category.getImage());
+        return categoryRepository.save(existing);
     }
 
     @Override
     public Category getCategoryById(Long id) {
-        return null;
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Category with id " + id + " does not exist"));
     }
 
     @Override
     public List<Category> getAllCategories() {
-        return List.of();
+        return categoryRepository.findAll();
     }
 
     @Override
-    public void deleteCategory(Category category) {
+    public void deleteCategory(Long id) {
+        categoryRepository.deleteById(id);
+    }
 
+    @Override
+    public Category activateCategory(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Category with id " + id + " does not exist"));
+        category.setActive(true);
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public Category deactivateCategory(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Category with id " + id + " does not exist"));
+        category.setActive(false);
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public boolean existsCategory(Long id) {
+        return categoryRepository.existsById(id);
     }
 }
