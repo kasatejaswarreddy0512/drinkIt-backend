@@ -20,6 +20,7 @@ public enum ErrorCode {
     ADDRESS_NOT_FOUND("ERR503", "Address not found."),
     CATEGORY_NOT_FOUND("ERR504", "Category not found."),
     BRAND_NOT_FOUND("ERR505", "Brand not found."),
+    PRODUCT_NOT_FOUND("ERR506", "Product not found."),
     ;
 
 

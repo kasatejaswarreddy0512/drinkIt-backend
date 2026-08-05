@@ -30,6 +30,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(Authorize ->
                         Authorize.requestMatchers("/api/**").authenticated()
                                 .requestMatchers("/api/super-admin").hasRole("ADMIN")
+                                .requestMatchers(
+                                        "/swagger-ui/**",
+                                        "/swagger-ui.html",
+                                        "/v3/api-docs/**",
+                                        "/api-docs/**"
+                                ).permitAll()
                                 .anyRequest().permitAll())
                 .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)
