@@ -1,0 +1,20 @@
+package com.ktsr.drinkIt.repository;
+
+import com.ktsr.drinkIt.entity.ProductImage;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
+
+    List<ProductImage> findByProductId(Long productId);
+
+    List<ProductImage> findByProductIdAndActiveTrue(Long productId);
+
+    Optional<ProductImage> findByProductIdAndPrimaryImageTrue(Long productId);
+
+    List<ProductImage> findByActiveTrue();
+
+    boolean existsByProductIdAndPrimaryImageTrue(Long productId);
+}
