@@ -1,5 +1,6 @@
 package com.ktsr.drinkIt.service.impl;
 
+import com.ktsr.drinkIt.DTO.LoginRequestDto;
 import com.ktsr.drinkIt.DTO.UserDto;
 import com.ktsr.drinkIt.config.JwtProvider;
 import com.ktsr.drinkIt.entity.User;
@@ -63,9 +64,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse login(UserDto userDto) throws Exception {
-        String email=userDto.getEmail();
-        String password= userDto.getPassword();
+    public AuthResponse login(LoginRequestDto loginRequestDto) throws Exception {
+        String email=loginRequestDto.getEmail();
+        String password= loginRequestDto.getPassword();
         Authentication authentication= authenticate(email,password);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
