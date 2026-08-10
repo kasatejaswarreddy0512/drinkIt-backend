@@ -23,6 +23,7 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND("ERR506", "Product not found."),
     PRODUCT_VARIANT_NOT_FOUND("ERR507", "Product variant not found."),
     PRODUCT_IMAGE_NOT_FOUND("ERR508", "Product image not found."),
+    CART_ITEM_NOT_FOUND("ERR509", "Cart item not found.")
     ;
 
 
