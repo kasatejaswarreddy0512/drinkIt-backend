@@ -1,6 +1,7 @@
 package com.ktsr.drinkIt.controller;
 
 import com.ktsr.drinkIt.DTO.LoginRequestDto;
+import com.ktsr.drinkIt.DTO.RegisterRequestDto;
 import com.ktsr.drinkIt.DTO.UserDto;
 import com.ktsr.drinkIt.enums.ErrorCode;
 import com.ktsr.drinkIt.helper.APIResponse;
@@ -24,7 +25,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<ResponseWrapper> createUser(@Valid @RequestBody UserDto userDto){
+    public ResponseEntity<ResponseWrapper> createUser(@Valid @RequestBody RegisterRequestDto userDto){
         try {
             AuthResponse authResponse=authService.signup(userDto);
             return APIResponse.get(ErrorCode.SUCCESS,authResponse,HttpStatus.CREATED);

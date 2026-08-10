@@ -2,26 +2,16 @@ package com.ktsr.drinkIt.DTO;
 
 import com.ktsr.drinkIt.enums.Gender;
 import com.ktsr.drinkIt.enums.Role;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
+@Getter@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class UserDto {
-
-    private Long id;
+public class RegisterRequestDto {
 
     @NotBlank(message = "Full name is required")
     private String fullName;
@@ -30,6 +20,7 @@ public class UserDto {
     @NotBlank(message = "Email is required")
     private String email;
 
+    @NotBlank(message = "Phone number is required")
     @Pattern(
             regexp = "^[6-9]\\d{9}$",
             message = "Invalid phone number"
@@ -37,6 +28,7 @@ public class UserDto {
     private String phone;
 
     @NotBlank(message = "Password is required")
+    @Size(min = 6, message = "Password must contain at least 6 characters")
     private String password;
 
     private Role role;
@@ -49,12 +41,5 @@ public class UserDto {
     private Boolean verified;
 
     private Boolean active;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime lastLoginAt;
-//
-//    private List<AddressDto> addresses;
 }
+
