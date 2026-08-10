@@ -1,13 +1,14 @@
 package com.ktsr.drinkIt.service;
 
 
+import com.ktsr.drinkIt.DTO.AddressDto;
 import com.ktsr.drinkIt.entity.Address;
 
 import java.util.List;
 
 public interface AddressService {
 
-    Address addAddress(Long userId, Address address);
+    Address addAddress(Long userId, AddressDto address);
 
     Address updateAddress(Long id,Address address);
 

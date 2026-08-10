@@ -14,10 +14,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AddressDto {
 
-    private Long id;
-
-    @NotNull(message = "User ID is required")
-    private Long userId;
+//    @NotNull(message = "User ID is required")
+//    private Long userId;
 
     @NotBlank(message = "House number is required")
     private String houseNo;
@@ -35,10 +33,7 @@ public class AddressDto {
     private String state;
 
     @NotBlank(message = "Pincode is required")
-    @Pattern(
-            regexp = "^[1-9][0-9]{6}$",
-            message = "Invalid pincode"
-    )
+    @Pattern(regexp = "^[1-9][0-9]{5}$", message = "Invalid pincode")
     private String pincode;
 
     private Double latitude;

@@ -1,5 +1,6 @@
 package com.ktsr.drinkIt.service.impl;
 
+import com.ktsr.drinkIt.DTO.AddressDto;
 import com.ktsr.drinkIt.entity.Address;
 import com.ktsr.drinkIt.entity.User;
 import com.ktsr.drinkIt.repository.AddressRepository;
@@ -19,22 +20,36 @@ public class AddressServiceImpl implements AddressService {
     private final UserRepository userRepository;
 
     @Override
-    public Address addAddress(Long userId, Address address) {
+    public Address addAddress(Long userId, AddressDto addressDto) {
+
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("User not found with id: " + userId)
+                );
 
-        address.setUser(user);
+        if (Boolean.TRUE.equals(addressDto.getDefaultAddress())) {
 
-        if (Boolean.TRUE.equals(address.getDefaultAddress())) {
             addressRepository.findByUserIdAndDefaultAddressTrue(userId)
-                    .ifPresent(a -> {
-                        a.setDefaultAddress(false);
-                        addressRepository.save(a);
+                    .ifPresent(existingDefault -> {
+                        existingDefault.setDefaultAddress(false);
+                        addressRepository.save(existingDefault);
                     });
         }
 
-        return addressRepository.save(address);
+        Address address = Address.builder()
+                .user(user)
+                .houseNo(addressDto.getHouseNo())
+                .street(addressDto.getStreet())
+                .area(addressDto.getArea())
+                .city(addressDto.getCity())
+                .state(addressDto.getState())
+                .pincode(addressDto.getPincode())
+                .latitude(addressDto.getLatitude())
+                .longitude(addressDto.getLongitude())
+                .defaultAddress(addressDto.getDefaultAddress())
+                .build();
 
+        return addressRepository.save(address);
     }
 
     @Override

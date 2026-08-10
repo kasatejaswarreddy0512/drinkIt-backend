@@ -1,5 +1,6 @@
 package com.ktsr.drinkIt.controller;
 
+import com.ktsr.drinkIt.DTO.AddressDto;
 import com.ktsr.drinkIt.entity.Address;
 import com.ktsr.drinkIt.enums.ErrorCode;
 import com.ktsr.drinkIt.helper.APIResponse;
@@ -23,7 +24,7 @@ public class AddressController {
     private final UserService userService;
 
     @PostMapping("/{userId}")
-    public ResponseEntity<ResponseWrapper> addAddress(@PathVariable Long userId,@Valid @RequestBody Address address){
+    public ResponseEntity<ResponseWrapper> addAddress(@PathVariable Long userId,@Valid @RequestBody AddressDto address){
         try {
             boolean exists=userService.existsUser(userId);
             if(!exists){
