@@ -1,19 +1,20 @@
 package com.ktsr.drinkIt.service;
 
+import com.ktsr.drinkIt.DTO.ProductDto;
 import com.ktsr.drinkIt.entity.Product;
 
 import java.util.List;
 
 public interface ProductService {
 
-    Product createProduct(Product product);
+    Product createProduct(ProductDto product);
     List<Product> getAllProducts();
     Product getProductById(Long id);
     List<Product> getActiveProducts();
     List<Product> getProductsByCategory(Long categoryId);
     List<Product> getProductsByBrand(Long brandId);
     List<Product> searchProducts(String name);
-    Product updateProduct(Long id,Product product);
+    Product updateProduct(Long id, ProductDto product);
     List<Product> getProductsByCategoryAndBrand(Long categoryId, Long brandId);
     List<Product> getProductsByRating(Double rating);
     Product activateProduct(Long id);

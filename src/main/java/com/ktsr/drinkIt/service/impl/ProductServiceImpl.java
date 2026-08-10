@@ -1,5 +1,6 @@
 package com.ktsr.drinkIt.service.impl;
 
+import com.ktsr.drinkIt.DTO.ProductDto;
 import com.ktsr.drinkIt.entity.Brand;
 import com.ktsr.drinkIt.entity.Category;
 import com.ktsr.drinkIt.entity.Product;
@@ -22,22 +23,35 @@ public class ProductServiceImpl implements ProductService {
     private final BrandRepository brandRepository;
 
     @Override
-    public Product createProduct(Product product) {
-        if (productRepository.existsByNameIgnoreCase(product.getName())) {
-            throw new IllegalArgumentException("Product already exists with name: " + product.getName());
+    public Product createProduct(ProductDto productDto) {
+
+        if (productRepository.existsByNameIgnoreCase(productDto.getName())) {
+            throw new IllegalArgumentException(
+                    "Product already exists with name: " + productDto.getName()
+            );
         }
 
-        Long categoryId = product.getCategory().getId();
-        Long brandId = product.getBrand().getId();
+        Category category = categoryRepository.findById(productDto.getCategoryId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Category not found with id: " + productDto.getCategoryId()
+                        ));
 
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+        Brand brand = brandRepository.findById(productDto.getBrandId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Brand not found with id: " + productDto.getBrandId()
+                        ));
 
-        Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(() -> new EntityNotFoundException("Brand not found"));
+        Product product = new Product();
 
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
         product.setCategory(category);
         product.setBrand(brand);
+        product.setImage(productDto.getImage());
+        product.setRating(productDto.getRating());
+        product.setActive(productDto.getActive());
 
         return productRepository.save(product);
     }
@@ -73,27 +87,49 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Long id, Product product) {
+    public Product updateProduct(Long id, ProductDto productDto) {
+
         Product existing = getProductById(id);
 
-        if (!existing.getName().equalsIgnoreCase(product.getName())
-                && productRepository.existsByNameIgnoreCase(product.getName())) {
-            throw new IllegalArgumentException("Product already exists with name: " + product.getName());
+        if (existing == null) {
+            throw new EntityNotFoundException(
+                    "Product not found with id: " + id
+            );
         }
 
-        Category category = categoryRepository.findById(product.getCategory().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+        // Check duplicate product name
+        if (!existing.getName().equalsIgnoreCase(productDto.getName())
+                && productRepository.existsByNameIgnoreCase(productDto.getName())) {
 
-        Brand brand = brandRepository.findById(product.getBrand().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Brand not found"));
+            throw new IllegalArgumentException(
+                    "Product already exists with name: " + productDto.getName()
+            );
+        }
 
-        existing.setName(product.getName());
-        existing.setDescription(product.getDescription());
+        // Find category
+        Category category = categoryRepository.findById(productDto.getCategoryId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Category not found with id: "
+                                        + productDto.getCategoryId()
+                        ));
+
+        // Find brand
+        Brand brand = brandRepository.findById(productDto.getBrandId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Brand not found with id: "
+                                        + productDto.getBrandId()
+                        ));
+
+        // Update product
+        existing.setName(productDto.getName());
+        existing.setDescription(productDto.getDescription());
         existing.setCategory(category);
         existing.setBrand(brand);
-        existing.setImage(product.getImage());
-        existing.setRating(product.getRating());
-        existing.setActive(product.getActive());
+        existing.setImage(productDto.getImage());
+        existing.setRating(productDto.getRating());
+        existing.setActive(productDto.getActive());
 
         return productRepository.save(existing);
     }

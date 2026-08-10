@@ -1,10 +1,12 @@
 package com.ktsr.drinkIt.controller;
 
+import com.ktsr.drinkIt.DTO.ProductDto;
 import com.ktsr.drinkIt.entity.Product;
 import com.ktsr.drinkIt.enums.ErrorCode;
 import com.ktsr.drinkIt.helper.APIResponse;
 import com.ktsr.drinkIt.helper.ResponseWrapper;
 import com.ktsr.drinkIt.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +22,7 @@ public class ProductController  {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ResponseWrapper> createProduct(@RequestBody Product product) {
+    public ResponseEntity<ResponseWrapper> createProduct(@Valid @RequestBody ProductDto product) {
         try {
             Product createdProduct = productService.createProduct(product);
             return APIResponse.get(ErrorCode.SUCCESS, createdProduct, HttpStatus.CREATED);
@@ -116,7 +118,7 @@ public class ProductController  {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseWrapper> updateProduct(@PathVariable Long id, @RequestBody Product product) {
+    public ResponseEntity<ResponseWrapper> updateProduct(@PathVariable Long id,@Valid @RequestBody ProductDto product) {
         try {
             boolean exists= productService.existsProduct(id);
             if(!exists){
