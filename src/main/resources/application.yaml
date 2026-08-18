@@ -19,3 +19,17 @@ spring:
   sql:
     init:
       mode: never
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+razorpay:
+  api:
+    key: rzp_test_Scbi0YCALuXXGU
+    secret: ttbAweICgg6olbYuXzL4412E
+
+stripe:
+  api:
+    key: ""
