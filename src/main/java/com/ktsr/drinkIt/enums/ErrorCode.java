@@ -32,6 +32,7 @@ public enum ErrorCode {
     INVOICE_NOT_FOUND("ERR515", "Invoice not found."),
     REFUND_NOT_FOUND("ERR516", "Refund not found."),
     REVIEW_NOT_FOUND("ERR517", "Review not found."),
+    SELLER_NOT_FOUND("ERR518", "Seller not found."),
     ;
 
 

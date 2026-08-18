@@ -46,6 +46,10 @@ public class Product {
     )
     private Brand brand;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
+
     @Size(max = 500, message = "Image URL cannot exceed 500 characters")
     @Column(length = 500)
     private String image;
