@@ -31,6 +31,7 @@ public enum ErrorCode {
     NOTIFICATION_NOT_FOUND("ERR514", "Notification not found."),
     INVOICE_NOT_FOUND("ERR515", "Invoice not found."),
     REFUND_NOT_FOUND("ERR516", "Refund not found."),
+    REVIEW_NOT_FOUND("ERR517", "Review not found."),
     ;
 
 
