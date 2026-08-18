@@ -38,8 +38,8 @@ public class ProductVariant {
 
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    @Column(nullable = false)
+    private Double price;
 
     @NotNull(message = "Stock is required")
     @Min(value = 0, message = "Stock cannot be negative")
@@ -49,8 +49,8 @@ public class ProductVariant {
     @DecimalMin(value = "0.0", message = "Discount cannot be negative")
     @DecimalMax(value = "100.0", message = "Discount cannot exceed 100")
     @Builder.Default
-    @Column(nullable = false, precision = 5, scale = 2)
-    private BigDecimal discount = BigDecimal.ZERO;
+    @Column(nullable = false)
+    private Double discount = 0.0;
 
     @NotBlank(message = "SKU is required")
     @Size(max = 100)

@@ -28,12 +28,12 @@ public class CouponDto {
     @NotNull(message = "Discount value is required")
     @DecimalMin(value = "0.0", inclusive = false,
             message = "Discount value must be greater than 0")
-    private BigDecimal discountValue;
+    private Double discountValue;
 
     @Builder.Default
     @DecimalMin(value = "0.0",
             message = "Minimum amount cannot be negative")
-    private BigDecimal minimumAmount = BigDecimal.ZERO;
+    private Double minimumAmount = 0.0;
 
     @NotNull(message = "Start date is required")
     private LocalDate startDate;

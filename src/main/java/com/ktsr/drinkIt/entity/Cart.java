@@ -26,8 +26,8 @@ public class Cart {
 
     @Builder.Default
     @DecimalMin(value = "0.0", message = "Total amount cannot be negative")
-    @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal totalAmount = BigDecimal.ZERO;
+    @Column(nullable = false)
+    private Double totalAmount = 0.0;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -53,10 +53,11 @@ public class AuthServiceImpl implements AuthService {
         savedUser.setActive(true);
         userRepository.save(savedUser);
 
-        Cart cart= Cart.builder()
+        Cart cart = Cart.builder()
                 .user(savedUser)
-                .totalAmount(BigDecimal.ZERO)
+                .totalAmount(0.0)
                 .build();
+
         cartRepository.save(cart);
 
         Authentication authentication= new UsernamePasswordAuthenticationToken(

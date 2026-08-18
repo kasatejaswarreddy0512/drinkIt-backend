@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,11 +34,12 @@ public class CartItemServiceImpl implements CartItemService {
         }
 
         Cart cart = cartRepository.findById(dto.getCartId())
-                .orElseThrow(() -> new EntityNotFoundException("Cart not found with id: " + dto.getCartId()));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Cart not found with id: " + dto.getCartId()));
 
-        ProductVariant variant = productVariantRepository
-                .findById(dto.getProductVariantId())
-                .orElseThrow(() -> new EntityNotFoundException("Product Variant not found with id: " + dto.getProductVariantId()));
+        ProductVariant variant = productVariantRepository.findById(dto.getProductVariantId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Product Variant not found with id: " + dto.getProductVariantId()));
 
         if (!Boolean.TRUE.equals(variant.getActive())) {
             throw new IllegalArgumentException("Product variant is inactive");
@@ -50,28 +50,35 @@ public class CartItemServiceImpl implements CartItemService {
         }
 
         Optional<CartItem> existingItem =
-                cartItemRepository.findByCartIdAndProductVariantId(dto.getCartId(), dto.getProductVariantId());
+                cartItemRepository.findByCartIdAndProductVariantId(
+                        dto.getCartId(),
+                        dto.getProductVariantId());
 
         CartItem cartItem;
+
         if (existingItem.isPresent()) {
+
             cartItem = existingItem.get();
+
             int newQuantity = cartItem.getQuantity() + dto.getQuantity();
 
             if (newQuantity > variant.getStock()) {
-                throw new IllegalArgumentException("Insufficient stock. Available stock: " + variant.getStock());
+                throw new IllegalArgumentException(
+                        "Insufficient stock. Available stock: " + variant.getStock());
             }
 
             cartItem.setQuantity(newQuantity);
             cartItem.setPrice(variant.getPrice());
-            cartItem.setSubtotal(variant.getPrice().multiply(BigDecimal.valueOf(newQuantity)));
+            cartItem.setSubtotal(variant.getPrice() * newQuantity);
 
         } else {
 
             if (dto.getQuantity() > variant.getStock()) {
-                throw new IllegalArgumentException("Insufficient stock. Available stock: " + variant.getStock());
+                throw new IllegalArgumentException(
+                        "Insufficient stock. Available stock: " + variant.getStock());
             }
 
-            BigDecimal subtotal = variant.getPrice().multiply(BigDecimal.valueOf(dto.getQuantity()));
+            Double subtotal = variant.getPrice() * dto.getQuantity();
 
             cartItem = CartItem.builder()
                     .cart(cart)
@@ -81,30 +88,46 @@ public class CartItemServiceImpl implements CartItemService {
                     .subtotal(subtotal)
                     .build();
         }
+
         CartItem savedItem = cartItemRepository.save(cartItem);
-         updateCartTotal(cart.getId());
+
+        updateCartTotal(cart.getId());
 
         return savedItem;
     }
 
     @Override
+    @Transactional
     public CartItem updateCartItem(Long id, CartItemDto dto) {
 
         CartItem item = getCartItemById(id);
 
+        if (item == null) {
+            throw new EntityNotFoundException("Cart Item not found");
+        }
+
         Cart cart = cartRepository.findById(dto.getCartId())
-                .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Cart not found"));
 
         ProductVariant variant = productVariantRepository.findById(dto.getProductVariantId())
-                .orElseThrow(() -> new EntityNotFoundException("Product Variant not found"));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Product Variant not found"));
+
+        if (!Boolean.TRUE.equals(variant.getActive())) {
+            throw new IllegalArgumentException("Product variant is inactive");
+        }
+
+        if (dto.getQuantity() > variant.getStock()) {
+            throw new IllegalArgumentException(
+                    "Insufficient stock. Available stock: " + variant.getStock());
+        }
 
         item.setCart(cart);
         item.setProductVariant(variant);
         item.setQuantity(dto.getQuantity());
         item.setPrice(variant.getPrice());
-        item.setSubtotal(
-                variant.getPrice().multiply(BigDecimal.valueOf(dto.getQuantity()))
-        );
+        item.setSubtotal(variant.getPrice() * dto.getQuantity());
 
         CartItem updatedItem = cartItemRepository.save(item);
 
@@ -115,39 +138,65 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public CartItem getCartItemById(Long id) {
-        return cartItemRepository.findById(id).orElse(null);
+
+        return cartItemRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Cart Item not found"));
     }
 
     @Override
     public List<CartItem> getCartItemsByCart(Long cartId) {
+
         return cartItemRepository.findByCartId(cartId);
     }
 
     @Override
     public boolean existsById(Long id) {
+
         return cartItemRepository.existsById(id);
     }
 
     @Override
+    @Transactional
     public void removeCartItem(Long id) {
+
         CartItem item = getCartItemById(id);
+
+        Long cartId = item.getCart().getId();
+
         cartItemRepository.delete(item);
+
+        updateCartTotal(cartId);
     }
 
     @Override
+    @Transactional
     public void clearCart(Long cartId) {
+
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Cart not found"));
+
         cartItemRepository.deleteByCartId(cartId);
+
+        cart.setTotalAmount(0.0);
+
+        cartRepository.save(cart);
     }
 
     private void updateCartTotal(Long cartId) {
+
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new EntityNotFoundException("Cart not found with id: " + cartId));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Cart not found with id: " + cartId));
 
         List<CartItem> items = cartItemRepository.findByCartId(cartId);
-        BigDecimal total = items.stream()
+
+        Double total = items.stream()
                 .map(CartItem::getSubtotal)
                 .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(0.0, Double::sum);
+
         cart.setTotalAmount(total);
 
         cartRepository.save(cart);

@@ -20,7 +20,7 @@ public class ProductVariantDto {
 
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false)
-    private BigDecimal price;
+    private Double price;
 
     @NotNull(message = "Stock is required")
     @Min(0)
@@ -29,7 +29,7 @@ public class ProductVariantDto {
     @DecimalMin(value = "0.0")
     @DecimalMax(value = "100.0")
     @Builder.Default
-    private BigDecimal discount = BigDecimal.ZERO;
+    private Double discount = 0.0;
 
     @NotBlank(message = "SKU is required")
     @Size(max = 100)

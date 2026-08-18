@@ -37,13 +37,13 @@ public class Coupon {
 
     @NotNull(message = "Discount value is required")
     @DecimalMin(value = "0.0")
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal discountValue;
+    @Column(nullable = false)
+    private Double discountValue;
 
     @Builder.Default
     @DecimalMin(value = "0.0")
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal minimumAmount = BigDecimal.ZERO;
+    @Column(nullable = false)
+    private Double minimumAmount = 0.0;
 
     @NotNull(message = "Start date is required")
     @Column(nullable = false)

@@ -38,13 +38,13 @@ public class CartItem {
 
     @NotNull
     @DecimalMin(value = "0.0")
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    @Column(nullable = false)
+    private Double price;
 
     @NotNull
     @DecimalMin(value = "0.0")
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal subtotal;
+    @Column(nullable = false)
+    private Double subtotal;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -65,7 +65,7 @@ public class CartItem {
 
     private void calculateSubtotal() {
         if (price != null && quantity != null) {
-            subtotal = price.multiply(BigDecimal.valueOf(quantity));
+            subtotal = price * quantity;
         }
     }
 }
