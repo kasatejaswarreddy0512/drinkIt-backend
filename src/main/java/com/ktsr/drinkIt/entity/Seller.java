@@ -68,6 +68,11 @@ public class Seller {
     @Column(length = 100)
     private String country;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Double rating = 0.0;
+
+
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
 

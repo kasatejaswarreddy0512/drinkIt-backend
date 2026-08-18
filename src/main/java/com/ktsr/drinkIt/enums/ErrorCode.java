@@ -33,6 +33,7 @@ public enum ErrorCode {
     REFUND_NOT_FOUND("ERR516", "Refund not found."),
     REVIEW_NOT_FOUND("ERR517", "Review not found."),
     SELLER_NOT_FOUND("ERR518", "Seller not found."),
+    SELLER_REVIEW_NOT_FOUND("ERR519", "Seller review not found."),
     ;
 
 
